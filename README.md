@@ -35,10 +35,10 @@ samples, guidance on mobile development, and a full API reference.
  height="400px" width="200px" />
  <img src="https://github.com/rutvik4940/chat_app/assets/153794371/81434c85-b902-4583-b5a7-27da2fd88c73"
  height="400px" width="200px" />
-https://github.com/rutvik4940/chat_app/assets/153794371/f1b0a674-f678-4f91-a5dc-437a53064864
-
-ight="400px" width="200px" />
  
 
- 
+https://github.com/rutvik4940/chat_app/assets/153794371/2bfba67f-6a0c-4550-85ec-975e1fb82186
+
+
+
 </p>
