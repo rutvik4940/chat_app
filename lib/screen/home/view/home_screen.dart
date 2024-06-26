@@ -6,8 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../utils/helper/share_helper.dart';
-import '../../controller/home_controller.dart';
+import '../controller/home_controller.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -29,11 +28,15 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Chat"),
+        title: const Text(
+          "Chat",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         actions: [
           IconButton(
             onPressed: () {
-              NotificationHelper.helper.showNotification("Hello","How are You" );
+              NotificationHelper.helper
+                  .showNotification("Hello", "How are You");
             },
             icon: const Icon(Icons.notifications_active),
           ),
@@ -95,16 +98,29 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () async {
-                    await FireDBHelper.helper.getChat(AuthHelper.helper.user!.uid, l1[index].uid!);
+                    await FireDBHelper.helper
+                        .getChat(AuthHelper.helper.user!.uid, l1[index].uid!);
                     Get.toNamed('chat', arguments: l1[index]);
                   },
-                  child: ListTile(style:ListTileStyle.drawer ,
-                    leading:  CircleAvatar(
+                  child: ListTile(
+                    leading: CircleAvatar(
                       radius: 30,
-                      child: Text("${l1[index].name!.substring(0,1)}",style: TextStyle(fontSize: 30),),
+                      backgroundColor: Color(0xff031C48D),
+                      child: Text(
+                        "${l1[index].name!.substring(0, 1)}",
+                        style: const TextStyle(fontSize: 30,color: Colors.black),
+                      ),
                     ),
-                    title: Text("${l1[index].name}",),
-                    subtitle: Text("${l1[index].number}"),
+                    title: Text(
+                      "${l1[index].name}",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      "${l1[index].number}",
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.normal),
+                    ),
                   ),
                 );
               },
@@ -114,10 +130,14 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: const Color(0xff031C48D),
         onPressed: () {
           Get.toNamed('contact');
         },
-        child: const Icon(Icons.chat),
+        child: const Icon(
+          Icons.chat,
+          color: Colors.white,
+        ),
       ),
       drawer: Drawer(
         child: Padding(
@@ -153,38 +173,59 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     Visibility(
-                      visible: FirebaseAuth.instance.currentUser!.email !=
-                          null,
+                      visible: FirebaseAuth.instance.currentUser!.email != null,
                       child: Text(
                         "${FirebaseAuth.instance.currentUser!.email}",
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),
-                    ElevatedButton(onPressed: () {
-                      Get.toNamed('profile');
-                    }, child: Text("edit profile"))
+                    ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: WidgetStatePropertyAll(
+                        Color(0xff031C48D),
+                      )),
+                      onPressed: () {
+                        Get.toNamed('profile');
+                      },
+                      child: const Text(
+                        " Edit profile",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
                   ],
                 ),
               ),
               Column(
                 children: [
-                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Logout",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
-                     IconButton(onPressed: () async {
-                       AuthHelper.helper.logOut();
-                       Get.offAllNamed('signin');
-                     }, icon: Icon(Icons.login_outlined))
-                    ],
-                  ),
-                  SizedBox(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text("Theme",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                      const Text(
+                        "Logout",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
+                      IconButton(
+                          onPressed: () async {
+                            AuthHelper.helper.logOut();
+                            Get.offAllNamed('signin');
+                          },
+                          icon: const Icon(Icons.login_outlined))
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Theme",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
                       Obx(
-                            () => IconButton(
+                        () => IconButton(
                           onPressed: () {
                             bool theme = controller.Theme.value;
                             theme = !theme;

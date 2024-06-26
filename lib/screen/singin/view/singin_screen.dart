@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../utils/helper/auth_helper.dart';
+import '../../home/controller/home_controller.dart';
 
 class SingInScreen extends StatefulWidget {
   const SingInScreen({super.key});
@@ -15,185 +16,239 @@ class SingInScreen extends StatefulWidget {
 class _SingInScreenState extends State<SingInScreen> {
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
-
+  HomeController controller = Get.put(HomeController());
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
-          children: [
-            Image.asset(
-              "assets/image/p1.png",
-              width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height,
-              fit: BoxFit.cover,
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SingleChildScrollView(
-                  child: Column(
+    return Scaffold(
+      body: Center(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 100,
+                  ),
+                  Image.asset(
+                    "assets/image/r3.png",
+                    height: 150,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Text(
+                    "Sign in to your Account",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    autofocus: false,
+                    decoration:controller.Theme==true?InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide: const BorderSide(color: Colors.white)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50) ,
+                        borderSide: const BorderSide(
+                          color: Colors.white ,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                        ),
+                      ),
+                      label:  Text(
+                        "Email",
+                        style: TextStyle(color:controller.Theme==true?  Colors.white: Colors.black),
+                      ),
+                    ): InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50),
+                        borderSide: const BorderSide(color: Colors.black)
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(50) ,
+                        borderSide: const BorderSide(
+                          color: Colors.black,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        borderSide: const BorderSide(
+                          color: Colors.black,
+                        ),
+                      ),
+                      label:  Text(
+                        "Email",
+                        style: TextStyle(color:controller.Theme==true?  Colors.white: Colors.black),
+                      ),
+                    ),
+                    controller: txtEmail,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Obx(() => TextField(
+                      obscureText: controller.isHide.value,
+                      autofocus: false,
+                      decoration:controller.Theme==true?InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50) ,
+                          borderSide: const BorderSide(
+                            color: Colors.white,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                          borderSide: const BorderSide(
+                            color: Colors.white ,
+
+                          ),
+                        ),
+                        suffixIcon: InkWell(
+                            onTap: () {
+                              controller.hidePassword();
+                            },
+                            child: Icon(controller.isHide.value?Icons.visibility_off:Icons.visibility)),
+                        label:  Text(
+                          "Password",
+                          style: TextStyle(color:controller.Theme==true?  Colors.white: Colors.black),
+                        ),
+                      ): InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50) ,
+                          borderSide: const BorderSide(
+                            color: Colors.black,
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                          borderSide: const BorderSide(
+                            color: Colors.black,
+
+                          ),
+                        ),
+                        suffixIcon: InkWell(
+                          onTap: () {
+                            controller.hidePassword();
+                          },
+                            child: Icon(controller.isHide.value?Icons.visibility_off:Icons.visibility)),
+                        label: const Text(
+                          "Password",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ),
+                      controller: txtPassword,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    style: const ButtonStyle(
+                      backgroundColor: MaterialStatePropertyAll(
+                        Color(0xff031C48D),
+                      ),
+                    ),
+                    onPressed: () async {
+                      String msg = await AuthHelper.helper
+                          .signIn(txtEmail.text, txtPassword.text);
+                      if (msg == 'success') {
+                        Get.offAllNamed('profile');
+                      } else {
+                        Get.snackbar('$msg', "");
+                      }
+                      txtPassword.clear();
+                      txtEmail.clear();
+                    },
+                    child: const Text(
+                      "Log in",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Image.asset(
-                        "assets/image/b1.png",
-                        height: 150,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text(
-                        "Login",
-                        style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextField(
-                        autofocus: false,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text("Enter your email"),
-                        ),
-                        controller: txtEmail,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextField(
-                        autofocus: false,
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          label: Text("Enter your password"),
-                        ),
-                        controller: txtPassword,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                            MaterialStatePropertyAll(Colors.blue)),
-                        onPressed: () async {
-                          String msg = await AuthHelper.helper
-                              .signIn(txtEmail.text, txtPassword.text);
-                          if (msg == 'success') {
+                      InkWell(
+                        onTap: () async {
+                          String msg = await AuthHelper.helper.gLoging();
+                          if (msg == 'Success') {
                             Get.offAllNamed('profile');
                           } else {
                             Get.snackbar('$msg', "");
                           }
-                          txtPassword.clear();
-                          txtEmail.clear();
                         },
-                        child: const Text(
-                          "Log in",
-                          style: TextStyle(color: Colors.white),
+                        child: Image.asset(
+                          "assets/logo/google.png",
+                          height: 30,
                         ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          String msg = await AuthHelper.helper.guestSignIn();
+                          if (msg == 'Success') {
+                            Get.offAllNamed('profile');
+                          } else {
+                            Get.snackbar('$msg', "");
+                          }
+                        },
+                        child: Image.asset(
+                          "assets/image/user.png",
+                          height: 30,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 80,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                       Text(
+                        "Did you have an Account?",
+                        style: TextStyle(color:controller.Theme==true?  Colors.white: Colors.black, fontSize: 15),
                       ),
                       TextButton(
                         onPressed: () {
                           Get.toNamed('singup');
                         },
                         child: const Text(
-                          "Creat a account",
-                          style: TextStyle(color: Colors.black),
+                          "Sign up",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Color(0xff031C48D),
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      const Text(
-                        "Or Login with ",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () async {
-                              String msg = await AuthHelper.helper.gLoging();
-                              if (msg == 'Success') {
-                                Get.offAllNamed('profile');
-                              } else {
-                                Get.snackbar('$msg', "");
-                              }
-                            },
-                            child: Container(
-                              height: 50,
-                              width: 185,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white.withOpacity(0.30),
-                              ),
-                              child: Container(
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      "assets/logo/google.png",
-                                      height: 15,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text("Continue with Google ")
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () async {
-                              String msg = await AuthHelper.helper.guestSignIn();
-                              if (msg == 'Success') {
-                                Get.offAllNamed('profile');
-                              } else {
-                                Get.snackbar('$msg', "");
-                              }
-                            },
-                            child: Container(
-                              height: 50,
-                              width: 185,
-                              padding: EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.white.withOpacity(0.30),
-                              ),
-                              child: Container(
-                                child: Row(
-                                  children: [
-                                    Image.asset(
-                                      "assets/logo/d1.png",
-                                      height: 15,
-                                    ),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text("Continue with Guest ")
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
-                  ),
-                ),
+                  )
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

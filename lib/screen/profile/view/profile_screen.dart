@@ -1,9 +1,12 @@
+import 'package:chat_app_2/screen/home/controller/home_controller.dart';
 import 'package:chat_app_2/screen/profile/model/profile_model.dart';
 import 'package:chat_app_2/utils/helper/auth_helper.dart';
 import 'package:chat_app_2/utils/helper/fcm_helper.dart';
 import 'package:chat_app_2/utils/helper/firedb_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -20,10 +23,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtNumber = TextEditingController();
   TextEditingController txtProfile = TextEditingController();
+  HomeController controller =Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Form(
+      key: key,
+      child: Scaffold(
         appBar: AppBar(),
         body: FutureBuilder(
           future: FireDBHelper.helper.getUserProfile(),
@@ -65,7 +71,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             return "required";
                           }
                         },
-                        decoration: const InputDecoration(
+                        decoration: controller.Theme==true?InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.person),
+                          label: Text("name"),
+                        ):InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.person),
                           label: Text("name"),
@@ -85,7 +119,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                           return null;
                         },
-                        decoration: const InputDecoration(
+                        decoration:controller.Theme==true?InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.call),
+                          label: Text("number"),
+                        ): InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.call),
                           label: Text("number"),
@@ -104,7 +166,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                         },
                         keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
+                        decoration: controller.Theme==true?InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.email),
+                          label: Text("email"),
+                        ):InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.email),
                           label: Text("email"),
@@ -120,7 +210,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }
                         },
                         controller: txtProfile,
-                        decoration: const InputDecoration(
+                        decoration: controller.Theme==true?InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                              color: Colors.white,
+                            ),
+                          ),
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.image),
+                          label: Text("profile"),
+                        ):InputDecoration(
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                            borderSide: BorderSide(
+                              color: Colors.black,
+                            ),
+                          ),
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.image),
                           label: Text("profile"),
@@ -130,18 +248,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         height: 10,
                       ),
                       ElevatedButton(
+                        style: ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                          Color(0xff031C48D),
+                        )),
                         onPressed: () async {
-                          profileModel model = profileModel(
-                              name: txtName.text,
-                              email: txtEmail.text,
-                              number: txtNumber.text,
-                              profile: txtProfile.text,
-                              uid: AuthHelper.helper.user!.uid,
-                              token: FCMHelper.fcm.token);
-                          await FireDBHelper.helper.userProfile(model);
-                          Get.offAllNamed('home');
+                          if (key.currentState!.validate()) {
+                            profileModel model = profileModel(
+                                name: txtName.text,
+                                email: txtEmail.text,
+                                number: txtNumber.text,
+                                profile: txtProfile.text,
+                                uid: AuthHelper.helper.user!.uid,
+                                token: FCMHelper.fcm.token);
+                            await FireDBHelper.helper.userProfile(model);
+                            Get.offAllNamed('home');
+                          }
                         },
-                        child: const Text("save"),
+                        child: const Text(
+                          "save",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),
@@ -150,6 +280,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
             return Center(child: CircularProgressIndicator());
           },
-        ));
+        ),
+      ),
+    );
   }
 }

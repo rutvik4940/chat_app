@@ -4,6 +4,7 @@ import 'package:chat_app_2/utils/helper/auth_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 
 class FireDBHelper {
   static FireDBHelper helper = FireDBHelper._();
@@ -106,8 +107,9 @@ class FireDBHelper {
        return  db.collection("chat").doc(chatId).collection("msg").orderBy("date").snapshots();
     }
   }
-  Future<DocumentReference<Map<String, dynamic>>> deletMessage( String myUid,String userUid)
+  Future<void> deleteMessage( String docId)
   async{
-    return db.collection("chat").doc(myUid).collection("msg").doc(userUid);
+    return db.collection("chat").doc(chatId).collection("msg").doc(docId).delete();
   }
+
 }

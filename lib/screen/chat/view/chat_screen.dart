@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../controller/home_controller.dart';
+import '../../home/controller/home_controller.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -20,41 +20,52 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController txtMessage = TextEditingController();
   HomeController controller = Get.put(HomeController());
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-
-        // shadowColor: Colors.black,
-        surfaceTintColor: Colors.white,
-        leading: Padding(
-          padding: const EdgeInsets.all(12),
-          child: CircleAvatar(
-            radius: 20,
-            child: Text(
-              "${model.name!.substring(0, 1)}",
+        surfaceTintColor: Colors.black,
+        leadingWidth: 100,
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              onPressed: () {
+                Get.back();
+              },
+              icon: Icon(Icons.arrow_back,color:  Color(0xff031C48D),),
             ),
-          ),
+            CircleAvatar(
+              backgroundColor: Color(0xff031C48D),
+              radius: 20,
+              child: Text("${model.name!.substring(0, 1)}",style: TextStyle(color: Colors.black),),
+            )
+          ],
         ),
-
         centerTitle: true,
-        title: Text("${model.name}",),
+        title: Text(
+          "${model.name}",
+        ),
       ),
       body: Stack(
         children: [
-         Obx(() =>
-           controller.Theme.value==true?Image.asset(
-                   "assets/image/w2.png",
-                   height: MediaQuery.sizeOf(context).height,
-                   width: MediaQuery.sizeOf(context).width,
-                   fit: BoxFit.cover,
-                 ):  Image.asset(
+          Obx(
+                () => controller.Theme.value == true
+                ? Image.asset(
+              "assets/image/w2.png",
+              height: MediaQuery.sizeOf(context).height,
+              width: MediaQuery.sizeOf(context).width,
+              fit: BoxFit.cover,
+            )
+                : Image.asset(
               "assets/image/r1.png",
               height: MediaQuery.sizeOf(context).height,
               width: MediaQuery.sizeOf(context).width,
               fit: BoxFit.cover,
             ),
-         ),
+          ),
           Column(
             children: [
               Expanded(
@@ -74,51 +85,66 @@ class _ChatScreenState extends State<ChatScreen> {
                         ChatModel chat = ChatModel.mapToModel(m1, id);
                         l1.add(chat);
                       }
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: ListView.builder(
-                              itemCount: l1.length,
-                              itemBuilder: (context, index) {
-                                return InkWell(
-                                  onLongPress: () async {
-                                    await FireDBHelper.helper.deletMessage(
-                                        AuthHelper.helper.user!.uid,
-                                        l1[index].uid!);
-                                  },
-                                  child: Container(
-                                    alignment: l1[index].uid ==
-                                            AuthHelper.helper.user!.uid
-                                        ? Alignment.centerRight
-                                        : Alignment.centerLeft,
-                                    child: Container(
-                                      margin: const EdgeInsets.all(5),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10),
-                                      width:MediaQuery.sizeOf(context).width*0.20,
-                                      alignment: Alignment.topCenter,
-                                      decoration: BoxDecoration(
-                                        color: l1[index].uid ==
-                                                AuthHelper.helper.user!.uid
-                                            ? Colors.green.shade100
-                                            : Colors.white,
-                                        borderRadius: const BorderRadius.only(
-                                          bottomLeft: Radius.circular(5),
-                                          bottomRight:Radius.circular(5),
-                                          topLeft: Radius.circular(5),
-                                          topRight: Radius.circular(5),
+                          return ListView.builder(
+                            itemCount: l1.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                onTap: () async {
+                                  Get.defaultDialog(
+                                      title: "are you sure ?",
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            if(l1[index].uid==AuthHelper.helper.user!.uid)
+                                            {
+                                              await FireDBHelper.helper.deleteMessage(l1[index].id!);
+                                            }
+                                            Get.back();
+                                          },
+                                          child: const Text("Yes",style: TextStyle(color: Colors.blue),),
                                         ),
-                                      ),
-                                      child: Text("${l1[index].msg}",
-                                         style: const TextStyle(color: Colors.black),),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          child: const Text("No"),
+                                        ),
+                                      ]);
+                                },
+                                child: Container(
+                                  alignment: l1[index].uid ==
+                                      AuthHelper.helper.user!.uid
+                                      ? Alignment.centerRight
+                                      : Alignment.centerLeft,
+                                  child: Container(
+                                    margin: const EdgeInsets.all(10),
+                                    padding: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: l1[index].uid ==
+                                          AuthHelper.helper.user!.uid
+                                          ?Color(0xffDDFFEC)
+                                          : Colors.white,
+                                      borderRadius:  BorderRadius.circular(10)
+                                    ),
+                                    child: Row(
+                                     mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          "${l1[index].msg}",
+                                          style: const TextStyle(color: Colors.black,fontSize: 16,fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(width: 10,),
+                                        Text(
+                                          "${l1[index].time}",
+                                          style: const TextStyle(color: Colors.black,fontSize: 12),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                );
-                              },
-                            ),
-                          ),
-                        ],
-                      );
+                                ),
+                              );
+                            },
+                          );
                     }
                     return Container();
                   },
@@ -128,18 +154,32 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: const EdgeInsets.all(12),
                 child: TextField(
                   controller: txtMessage,
-                  decoration: InputDecoration(
+                  decoration:controller.Theme ==true? InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50) ,
+                      borderSide: BorderSide(
+                        color: Colors.white,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(
+                        color: Colors.white  ,
+
+                      ),
+                    ),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    // hintStyle: TextStyle(color: Colors.white),
-                    hintText: "Type",
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    hintText: "Type...",
                     suffixIcon: IconButton(
                       onPressed: () {
                         ChatModel c1 = ChatModel(
-                            uid: AuthHelper.helper.user!.uid,
-                            date: "${DateTime.now()}",
-                            time: "${TimeOfDay.now()}",
-                            msg: txtMessage.text);
+                          uid: AuthHelper.helper.user!.uid,
+                          // date: "${DateTime.now().hour}:${DateTime.now().minute}",
+                          time: "${DateTime.now().hour}:${DateTime.now().minute}",
+                          msg: txtMessage.text,
+                        );
                         txtMessage.clear();
                         FireDBHelper.helper.sendMessage(c1, model);
                       },
@@ -147,7 +187,40 @@ class _ChatScreenState extends State<ChatScreen> {
                         Icons.send,
                       ),
                     ),
-                  ),
+                  ):InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50) ,
+                      borderSide: BorderSide(
+                        color: Colors.black,
+                      ),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25.0),
+                      borderSide: BorderSide(
+                        color: Colors.black,
+
+                      ),
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    hintText: "Type...",
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        ChatModel c1 = ChatModel(
+                          uid: AuthHelper.helper.user!.uid,
+                          // date: "${DateTime.now().hour}:${DateTime.now().minute}",
+                          time: "${DateTime.now().hour}:${DateTime.now().minute}",
+                          msg: txtMessage.text,
+                        );
+                        txtMessage.clear();
+                        FireDBHelper.helper.sendMessage(c1, model);
+                      },
+                      icon: const Icon(
+                        Icons.send,
+                      ),
+                    ),
+                  )
                 ),
               )
             ],
