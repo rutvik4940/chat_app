@@ -1,4 +1,4 @@
-![Screenshot_20240626_105506](https://github.com/rutvik4940/chat_app/assets/153794371/f848fabd-3443-4779-a021-2d8e56a12dd5)
+
 
 A new Flutter project.
 
